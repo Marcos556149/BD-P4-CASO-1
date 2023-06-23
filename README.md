@@ -62,3 +62,7 @@ CONSULTAS
 18*) select * from persona natural join (select correo from inscripcion where nom='Kotlin II') A
 19*) (select correo from inscripcion where nom='Kotlin I') intersect (select correo from inscripcion where nom='Kotlin II')
 20*) select * from persona natural join ((select correo from inscripcion where nom='Python I' and nota >= 4) intersect (select correo from inscripcion where nom='Python II' and nota >= 4)) A
+21*) select distinct correo from ((select correo,nom from inscripcion) A cross join (select correo as CO, nom as NOO from inscripcion) B) C where correo=co and nom!=noo
+22*) select * from persona natural join (select distinct correo from ((select nom,correo from curso natural join dicta where ch < 30) A cross join (select nom as NOO,correo as CO from curso natural join dicta where ch < 30) B) C where correo=CO and nom!=NOO) D
+23*) select  correo,CO from ((select correo,nom from inscripcion) A cross join (select correo as CO, nom as NOO from inscripcion) B) C where correo!=CO and nom=NOO
+24*) select  correo,CO from ((select correo,nom,correod from inscripcion) A cross join (select correo as CO, nom as NOO, correod as COD from inscripcion) B) C where correo!=CO and nom=NOO and correod!=COD
