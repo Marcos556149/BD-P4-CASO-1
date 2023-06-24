@@ -63,6 +63,32 @@ CONSULTAS
 19*) (select correo from inscripcion where nom='Kotlin I') intersect (select correo from inscripcion where nom='Kotlin II')
 20*) select * from persona natural join ((select correo from inscripcion where nom='Python I' and nota >= 4) intersect (select correo from inscripcion where nom='Python II' and nota >= 4)) A
 21*) select distinct correo from ((select correo,nom from inscripcion) A cross join (select correo as CO, nom as NOO from inscripcion) B) C where correo=co and nom!=noo
+     OTRA FORMA EPICA CON GROUP BY(MUY IMPORTANTE)*) select correo from inscripcion group by correo having count(correo) > 1
 22*) select * from persona natural join (select distinct correo from ((select nom,correo from curso natural join dicta where ch < 30) A cross join (select nom as NOO,correo as CO from curso natural join dicta where ch < 30) B) C where correo=CO and nom!=NOO) D
+     OTRA FORMA EPICA CON GROUP BY(MUY IMPORTANTE)*) select * from (select correo from dicta natural join curso where ch < 30 group by 
+     correo having count(correo) > 1) A natural join persona
 23*) select  correo,CO from ((select correo,nom from inscripcion) A cross join (select correo as CO, nom as NOO from inscripcion) B) C where correo!=CO and nom=NOO
+     OTRA FORMA CON INNER JOIN PERO UNA SOLA COLUMNA*) select distinct i1.correo
+     from inscripcion i1 inner join inscripcion i2 on i1.correo != i2.correo and i1.nom = i2.nom
 24*) select  correo,CO from ((select correo,nom,correod from inscripcion) A cross join (select correo as CO, nom as NOO, correod as COD from inscripcion) B) C where correo!=CO and nom=NOO and correod!=COD
+     OTRA FORMA CON INNER JOIN PERO UNA SOLA COLUMNA*) select distinct i1.correo
+     from inscripcion i1 inner join inscripcion i2 on i1.correo != i2.correo and i1.nom = i2.nom and i1.correod != i2.correod
+25*) insert into inscripcion values ('anagarcia32@gmail.com','Kotlin I','pedroibañez@yahoo.com.ar', 10),
+							   ('anagarcia32@gmail.com', 'Kotlin II', 'pedroibañez@yahoo.com.ar',8),
+							   ('anagarcia32@gmail.com','Javascript I', 'pedroibañez@yahoo.com.ar', 7),
+							   ('anagarcia32@gmail.com', 'Javascript II', 'pedroibañez@yahoo.com.ar', 7),
+							   ('anagarcia32@gmail.com','Ruby', 'pedroibañez@yahoo.com.ar',9);
+     select *
+from persona
+where not exists(select *
+				from curso
+				where not exists(select *
+								from inscripcion
+								where inscripcion.nom=curso.nom and inscripcion.correo=persona.correo))
+26*) select *
+from persona
+where not exists(select * 
+				 from curso natural join dicta A where correo='pedroibañez@yahoo.com.ar' and
+				 not exists(select *
+							from inscripcion
+							where inscripcion.correo=persona.correo and inscripcion.nom=A.nom))        
